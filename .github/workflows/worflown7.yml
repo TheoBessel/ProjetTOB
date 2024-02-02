@@ -35,7 +35,7 @@ jobs:
       run: |
         LAST_COMMIT_SHA=${{ github.sha }}
         
-        COMMIT_MESSAGES=$(git log --pretty=format:"%s" $LAST_COMMIT_SHA)
+        COMMIT_MESSAGES=$(git log --format=%s $LAST_COMMIT_SHA)
 
         for COMMIT_MESSAGE in $COMMIT_MESSAGES; do
           echo "$COMMIT_MESSAGE"
