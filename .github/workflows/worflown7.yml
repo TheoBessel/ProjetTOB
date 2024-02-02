@@ -33,7 +33,7 @@ jobs:
 
     - name: Check commit messages
       run: |
-        COMMIT_MESSAGES=$(git log --format=%s ${{ github.event.before }}..${{ github.sha }})
+        COMMIT_MESSAGES=$(git log --format=%s ${{ github.event.before }}..${{ github.event.after }})
 
         for COMMIT_MESSAGE in $COMMIT_MESSAGES; do
           if ! [[ $COMMIT_MESSAGE =~ ^\[(Implement|Resolves|Refactor)\] : .{10,45}$ ]]; then
