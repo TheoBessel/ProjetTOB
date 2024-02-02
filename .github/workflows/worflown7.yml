@@ -34,7 +34,7 @@ jobs:
     - name: Check commit messages
       # Get commit messages and print them
       run: |
-        COMMIT_MESSAGES=$(git log --format=%s)
+        COMMIT_MESSAGES=$(git log --pretty=oneline --format=%s)
 
         for COMMIT_MESSAGE in $COMMIT_MESSAGES; do
           echo "$COMMIT_MESSAGE"
