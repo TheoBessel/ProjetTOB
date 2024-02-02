@@ -31,9 +31,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Set default before_sha
+      run: echo "BEFORE_SHA=${{ github.event.before:-$(git rev-list --max-parents=0 HEAD) }}" >> $GITHUB_ENV
+
     - name: Check commit messages
       run: |
-        COMMIT_MESSAGES=$(git log --format=%s ${{ github.event.before }}..${{ github.event.after }})
+        COMMIT_MESSAGES=$(git log --format=%s $BEFORE_SHA..${{ github.sha }})
 
         for COMMIT_MESSAGE in $COMMIT_MESSAGES; do
           if ! [[ $COMMIT_MESSAGE =~ ^\[(Implement|Resolves|Refactor)\] : .{10,45}$ ]]; then
