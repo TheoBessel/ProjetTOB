@@ -13,39 +13,40 @@ name: "WorflowN7"
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   schedule:
-    - cron: '00 4 * * *' # runs at 4:00 everyday
+    - cron: "00 4 * * *" # runs at 4:00 everyday
 
 jobs:
   test_compilation:
     name: Test Compilation
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
     timeout-minutes: 360
     permissions:
       security-events: write
-        
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Check commit messages
-      # Get commit messages and print them
-      run: |
-        COMMIT_MESSAGES=$(git log --pretty=oneline --format=%s)
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-        for COMMIT_MESSAGE in $COMMIT_MESSAGES; do
-          echo "$COMMIT_MESSAGE"
-        done
+      - name: Check commit messages
+        run: |
+          COMMIT_MESSAGE=$(git log --pretty=oneline --format=%s)
 
-    - name: Set up JDK 7
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'oracle'
+          if ! [[ $COMMIT_MESSAGE =~ ^\[(Implement|Resolves|Refactor)\] : .{10,45}$ ]]; then
+              echo "Error: Commit message does not follow the required format or length."
+              echo "Allowed formats: [Implement], [Resolves], [Refactor]"
+              echo "Allowed length: between 10 and 45 characters"
+              exit 1
+          fi
 
-    - name: Run build the code
-      run: javac main.java
-        
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "oracle"
+
+      - name: Run build the code
+        run: javac main.java
